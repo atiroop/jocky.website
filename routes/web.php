@@ -30,10 +30,15 @@ Route::get('/writing/{article:slug}', function (Article $article) {
 
 Route::get('/writing/{article:slug}/cover', function (Article $article) {
     abort_unless($article->status === 'published' && $article->published_at?->isPast(), 404);
-    abort_unless(is_string($article->cover_image) && preg_match('#\\Aarticle-covers/[A-Za-z0-9._-]+\\z#', $article->cover_image), 404);
-    abort_unless(Storage::disk('local')->exists($article->cover_image), 404);
+    abort_unless(is_string($article->cover_image) && preg_match('#\\Aarticle-covers/[A-Za-z0-9-]+\\.(?:jpe?g|png|webp)\\z#i', $article->cover_image), 404);
 
-    return Storage::disk('local')->response($article->cover_image);
+    try {
+        abort_unless(Storage::disk('r2_media')->exists($article->cover_image), 404);
+
+        return Storage::disk('r2_media')->response($article->cover_image, headers: ['Cache-Control' => 'public, max-age=300']);
+    } catch (\Throwable) {
+        abort(404);
+    }
 })->name('writing.cover');
 
 Route::view('/about', 'about')->name('about');

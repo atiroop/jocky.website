@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Articles\Schemas;
 
+use App\Services\ArticleMediaStorage;
 use App\Models\Category;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -14,6 +15,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\CheckboxList;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ArticleForm
 {
@@ -32,9 +34,12 @@ class ArticleForm
                 RichEditor::make('body')
                     ->required()
                     ->columnSpanFull()
-                    ->fileAttachmentsDisk('local')
+                    ->fileAttachmentsDisk('r2_media')
                     ->fileAttachmentsDirectory('article-body')
                     ->fileAttachmentsVisibility('private')
+                    ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->fileAttachmentsMaxSize(10240)
+                    ->saveUploadedFileAttachmentUsing(fn (TemporaryUploadedFile $file): string => app(ArticleMediaStorage::class)->storeBodyAttachment($file))
                     ->preventFileAttachmentPathTampering(),
                 Select::make('category_id')
                     ->label('Category')
@@ -44,7 +49,16 @@ class ArticleForm
                 CheckboxList::make('tags')->relationship(titleAttribute: 'name')->columns(3),
                 Select::make('status')->options(['draft' => 'Draft', 'published' => 'Published'])->required()->default('draft'),
                 DateTimePicker::make('published_at'),
-                FileUpload::make('cover_image')->disk('local')->directory('article-covers')->visibility('private')->image(),
+                FileUpload::make('cover_image')
+                    ->disk('r2_media')
+                    ->directory('article-covers')
+                    ->visibility('private')
+                    ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->maxSize(5120)
+                    ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file): string => app(ArticleMediaStorage::class)->storeCover($file)),
+                TextInput::make('cover_image_alt')->maxLength(255),
+                TextInput::make('cover_image_caption')->maxLength(255),
                 TextInput::make('seo_title')->maxLength(255),
                 Textarea::make('seo_description')->rows(2)->maxLength(320),
             ]);

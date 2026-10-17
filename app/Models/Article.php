@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
+use App\Services\ArticleBodyAttachmentProvider;
 
 class Article extends Model
 {
     protected $fillable = [
         'category_id', 'title', 'slug', 'subtitle', 'excerpt', 'body', 'status',
-        'published_at', 'cover_image', 'seo_title', 'seo_description',
+        'published_at', 'cover_image', 'cover_image_alt', 'cover_image_caption', 'seo_title', 'seo_description',
     ];
 
     protected function casts(): array
@@ -50,8 +51,9 @@ class Article extends Model
     public function safeBodyHtml(): string
     {
         return RichContentRenderer::make($this->body ?? '')
-            ->fileAttachmentsDisk('local')
+            ->fileAttachmentsDisk('r2_media')
             ->fileAttachmentsVisibility('private')
+            ->fileAttachmentProvider(app(ArticleBodyAttachmentProvider::class, ['article' => $this]))
             ->toHtml();
     }
 

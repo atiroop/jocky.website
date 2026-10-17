@@ -1,5 +1,17 @@
 <?php
 
+$r2 = [
+    'driver' => 's3',
+    'key' => env('R2_ACCESS_KEY_ID'),
+    'secret' => env('R2_SECRET_ACCESS_KEY'),
+    'region' => env('R2_REGION', 'auto'),
+    'bucket' => env('R2_BUCKET', 'jocky-cdn-storage'),
+    'endpoint' => env('R2_ENDPOINT'),
+    'use_path_style_endpoint' => false,
+    'throw' => true,
+    'report' => false,
+];
+
 return [
 
     /*
@@ -59,6 +71,11 @@ return [
             'throw' => false,
             'report' => false,
         ],
+
+        // Keep article media private. Published content is served through
+        // short-lived signed URLs or the guarded application route.
+        'r2_media' => [...$r2, 'root' => 'article-media'],
+        'r2_private' => [...$r2, 'root' => 'private'],
 
     ],
 
