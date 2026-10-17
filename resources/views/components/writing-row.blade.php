@@ -1,0 +1,2 @@
+@props(['entry'])
+<article class="writing-row"><div class="writing-meta"><time>{{ $entry['date'] }}</time><span>{{ $entry['category'] }}</span></div><div class="writing-copy"><h2><a href="{{ route('writing.show', $entry['slug']) }}">{{ $entry['title'] }}</a></h2><p>{{ $entry['excerpt'] }}</p></div><a class="row-arrow" href="{{ route('writing.show', $entry['slug']) }}" aria-label="Read {{ $entry['title'] }}">↗</a></article>
