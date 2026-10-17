@@ -65,3 +65,5 @@ body { font-family: 'IBM Plex Sans Thai', sans-serif; font-size: 16px; line-heig
     .article-navigation a strong { font-size: 17px; }
     .archive-search button { padding-inline: 14px; }
 }
+
+.row-arrow { display: flex; min-width: 24px; min-height: 44px; align-items: center; justify-content: center; }
