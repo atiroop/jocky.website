@@ -1,18 +1,39 @@
 <?php
 
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
-$entries = [
-    ['slug' => 'the-shape-of-a-morning', 'title' => 'The shape of a morning', 'date' => '17 October 2026', 'category' => 'Notes', 'excerpt' => 'On the small rituals that make a day feel like it belongs to you.'],
-    ['slug' => 'a-language-for-rain', 'title' => 'A language for rain', 'date' => '04 October 2026', 'category' => 'Observations', 'excerpt' => 'Listening to a familiar city change its voice when the clouds gather.'],
-    ['slug' => 'the-things-we-keep', 'title' => 'The things we keep', 'date' => '21 September 2026', 'category' => 'Reflections', 'excerpt' => 'A few thoughts on memory, ordinary objects, and what they hold.'],
-];
+Route::get('/', function () {
+    $entries = Article::published()->with('category')->latest('published_at')->take(3)->get();
 
-Route::get('/', fn () => view('home', ['entries' => $entries]))->name('home');
-Route::get('/writing', fn () => view('writing.index', ['entries' => $entries]))->name('writing.index');
-Route::get('/writing/{slug}', function (string $slug) use ($entries) {
-    $entry = collect($entries)->firstWhere('slug', $slug);
-    abort_if($entry === null, 404);
-    return view('writing.show', ['entry' => $entry]);
+    return view('home', compact('entries'));
+})->name('home');
+
+Route::get('/writing', function () {
+    $query = Article::published()->with('category')->latest('published_at');
+    $term = trim((string) request('q', ''));
+
+    if ($term !== '') {
+        $query->where(fn ($articles) => $articles->where('title', 'like', "%{$term}%")
+            ->orWhere('excerpt', 'like', "%{$term}%"));
+    }
+
+    return view('writing.index', ['entries' => $query->paginate(12)->withQueryString()]);
+})->name('writing.index');
+
+Route::get('/writing/{article:slug}', function (Article $article) {
+    abort_unless($article->status === 'published' && $article->published_at?->isPast(), 404);
+
+    return view('writing.show', ['entry' => $article->load(['category', 'tags'])]);
 })->name('writing.show');
+
+Route::get('/writing/{article:slug}/cover', function (Article $article) {
+    abort_unless($article->status === 'published' && $article->published_at?->isPast(), 404);
+    abort_unless(is_string($article->cover_image) && preg_match('#\\Aarticle-covers/[A-Za-z0-9._-]+\\z#', $article->cover_image), 404);
+    abort_unless(Storage::disk('local')->exists($article->cover_image), 404);
+
+    return Storage::disk('local')->response($article->cover_image);
+})->name('writing.cover');
+
 Route::view('/about', 'about')->name('about');
