@@ -12,7 +12,8 @@ Route::get('/', function () {
 
 Route::get('/writing', function () {
     $query = Article::published()->with('category')->latest('published_at');
-    $term = trim((string) request('q', ''));
+    $validated = request()->validate(['q' => ['nullable', 'string', 'max:120']]);
+    $term = trim((string) ($validated['q'] ?? ''));
 
     if ($term !== '') {
         $query->where(fn ($articles) => $articles->where('title', 'like', "%{$term}%")
@@ -25,7 +26,10 @@ Route::get('/writing', function () {
 Route::get('/writing/{article:slug}', function (Article $article) {
     abort_unless($article->status === 'published' && $article->published_at?->isPast(), 404);
 
-    return view('writing.show', ['entry' => $article->load(['category', 'tags'])]);
+    $previous = Article::published()->where('published_at', '<', $article->published_at)->latest('published_at')->first();
+    $next = Article::published()->where('published_at', '>', $article->published_at)->oldest('published_at')->first();
+
+    return view('writing.show', ['entry' => $article->load(['category', 'tags']), 'previous' => $previous, 'next' => $next]);
 })->name('writing.show');
 
 Route::get('/writing/{article:slug}/cover', function (Article $article) {

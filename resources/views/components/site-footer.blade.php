@@ -1,1 +1,1 @@
-<footer class="site-footer"><a class="footer-mark" href="{{ route('home') }}">jocky.</a><p>A quiet place for words to find their shape.</p><span>© {{ date('Y') }} Jocky</span></footer>
+<footer class="site-footer"><a class="footer-mark" href="{{ route('home') }}" aria-label="หน้าแรก jocky">jocky.</a><p>พื้นที่เล็ก ๆ สำหรับเรื่องราวที่อยากบันทึก</p><span>© {{ now()->year + 543 }} jocky.</span></footer>

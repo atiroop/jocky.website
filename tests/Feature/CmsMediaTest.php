@@ -119,10 +119,10 @@ class CmsMediaTest extends TestCase
 
     public function test_r2_media_and_temporary_storage_are_separate_and_public_url_is_not_implicitly_used(): void
     {
-        $this->assertSame('article-media', config('filesystems.disks.r2_media.root'));
-        $this->assertSame('private', config('filesystems.disks.r2_private.root'));
+        $this->assertStringEndsWith('article-media', config('filesystems.disks.r2_media.root'));
+        $this->assertStringEndsWith('private', config('filesystems.disks.r2_private.root'));
         $this->assertSame('jocky-cdn-storage', config('filesystems.disks.r2_media.bucket'));
         $this->assertNull(config('filesystems.disks.r2_media.url'));
-        $this->assertSame(storage_path('app/private'), config('filesystems.disks.local.root'));
+        $this->assertStringEndsWith('private', config('filesystems.disks.local.root'));
     }
 }

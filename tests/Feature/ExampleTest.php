@@ -14,8 +14,8 @@ class ExampleTest extends TestCase
     {
         $this->get('/about')
             ->assertOk()
-            ->assertSee('A small introduction')
-            ->assertSee('No biography has been added yet');
+            ->assertSee('เกี่ยวกับ')
+            ->assertSee(config('jocky.about_intro'));
     }
 
     public function test_admin_login_is_available_without_public_registration(): void

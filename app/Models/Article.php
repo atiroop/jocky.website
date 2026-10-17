@@ -61,4 +61,13 @@ class Article extends Model
     {
         return 'slug';
     }
+
+    public function readingTimeMinutes(): int
+    {
+        $text = html_entity_decode(strip_tags((string) $this->body), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        preg_match_all('/\p{Thai}/u', $text, $thaiCharacters);
+        $latinWords = str_word_count((string) preg_replace('/\p{Thai}+/u', ' ', $text));
+
+        return max(1, (int) ceil((count($thaiCharacters[0]) / 300) + ($latinWords / 200)));
+    }
 }
