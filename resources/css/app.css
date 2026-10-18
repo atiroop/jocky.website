@@ -31,7 +31,7 @@ body { font-family: 'IBM Plex Sans Thai', sans-serif; font-size: 16px; line-heig
 .article-body h2, .article-body h3 { font-family: 'IBM Plex Sans Thai', sans-serif; line-height: 1.55; letter-spacing: normal; }
 .article-body img { display: block; max-width: 100%; height: auto; margin: 2.5rem auto; }
 .article-cover-figure { max-width: 800px; margin: 44px auto 0; }
-.article-cover { display: block; width: 100%; height: auto; max-height: 560px; object-fit: cover; }
+.article-cover { display: block; width: 100%; height: auto; }
 .article-cover-figure figcaption { margin-top: 10px; color: var(--muted); text-align: center; font-size: 13px; }
 .archive-search { display: flex; gap: 10px; max-width: 620px; margin: 0 0 30px; }
 .archive-search input { min-width: 0; flex: 1; padding: 11px 14px; border: 1px solid var(--rule); border-radius: 2px; background: transparent; color: var(--ink); font: inherit; }
