@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use App\Services\ArticleBodyAttachmentProvider;
+use App\Filament\RichEditor\ArticleVideoBlock;
+use App\Services\ArticleVideoHtmlRenderer;
 
 class Article extends Model
 {
@@ -50,11 +52,14 @@ class Article extends Model
 
     public function safeBodyHtml(): string
     {
-        return RichContentRenderer::make($this->body ?? '')
+        $html = RichContentRenderer::make($this->body ?? '')
             ->fileAttachmentsDisk('r2_media')
             ->fileAttachmentsVisibility('private')
             ->fileAttachmentProvider(app(ArticleBodyAttachmentProvider::class, ['article' => $this]))
+            ->customBlocks([ArticleVideoBlock::class => ['article' => $this]])
             ->toHtml();
+
+        return app(ArticleVideoHtmlRenderer::class)->render($html, $this);
     }
 
     public function getRouteKeyName(): string

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Articles\Schemas;
 
+use App\Filament\RichEditor\ArticleVideoBlock;
 use App\Services\ArticleMediaStorage;
 use App\Models\Category;
 use Filament\Forms\Components\DateTimePicker;
@@ -40,7 +41,8 @@ class ArticleForm
                     ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                     ->fileAttachmentsMaxSize(10240)
                     ->saveUploadedFileAttachmentUsing(fn (TemporaryUploadedFile $file): string => app(ArticleMediaStorage::class)->storeBodyAttachment($file))
-                    ->preventFileAttachmentPathTampering(),
+                    ->preventFileAttachmentPathTampering()
+                    ->customBlocks([ArticleVideoBlock::class]),
                 Select::make('category_id')
                     ->label('Category')
                     ->options(fn () => Category::query()->orderBy('name')->pluck('name', 'id'))

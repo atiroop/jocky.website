@@ -30,6 +30,9 @@ body { font-family: 'IBM Plex Sans Thai', sans-serif; font-size: 16px; line-heig
 .article-body p { margin-bottom: 1.45em; }
 .article-body h2, .article-body h3 { font-family: 'IBM Plex Sans Thai', sans-serif; line-height: 1.55; letter-spacing: normal; }
 .article-body img { display: block; max-width: 100%; height: auto; margin: 2.5rem auto; }
+.article-video { max-width: 100%; margin: 2.5rem 0; }
+.article-video video { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 2px; background: #24231f; }
+.article-video figcaption { margin-top: 0.75rem; color: #77766d; font-family: 'IBM Plex Sans Thai', sans-serif; font-size: 0.875rem; line-height: 1.7; text-align: center; }
 .article-cover-figure { max-width: 800px; margin: 44px auto 0; }
 .article-cover { display: block; width: 100%; height: auto; }
 .article-cover-figure figcaption { margin-top: 10px; color: var(--muted); text-align: center; font-size: 13px; }
