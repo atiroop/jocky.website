@@ -12,8 +12,11 @@
             </div>
 
             <div class="hero-visual">
-                @if (filled(config('jocky.home_hero_image')) && filled(config('jocky.home_hero_alt')))
-                    <img class="hero-photo" src="{{ asset(ltrim(config('jocky.home_hero_image'), '/')) }}" width="1600" height="900" alt="{{ config('jocky.home_hero_alt') }}" loading="eager" fetchpriority="high" decoding="async">
+                @if (filled(config('jocky.home_hero_image')) && filled(config('jocky.home_hero_image_small')) && filled(config('jocky.home_hero_fallback')) && filled(config('jocky.home_hero_alt')))
+                    <picture>
+                        <source type="image/webp" srcset="{{ asset(config('jocky.home_hero_image_small')) }} 800w, {{ asset(config('jocky.home_hero_image')) }} 1600w" sizes="(max-width: 640px) calc(100vw - 36px), 52vw">
+                        <img class="hero-photo" src="{{ asset(config('jocky.home_hero_fallback')) }}" width="1600" height="900" alt="{{ config('jocky.home_hero_alt') }}" loading="eager" fetchpriority="high" decoding="async">
+                    </picture>
                 @else
                     <div class="hero-illustration" role="img" aria-label="ภาพประกอบชั่วคราว บรรยากาศริมหน้าต่างพร้อมหนังสือและกาแฟ รอภาพถ่ายจากเจ้าของ">
                         <div class="hero-window" aria-hidden="true"></div>
