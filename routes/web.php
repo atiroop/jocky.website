@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
-    $entries = Article::published()->with('category')->latest('published_at')->take(3)->get();
+    $entries = Article::published()->with('category')->latest('published_at')->take(4)->get();
 
     return view('home', compact('entries'));
 })->name('home');
