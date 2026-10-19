@@ -11,14 +11,20 @@
                 <a class="hero-button" href="{{ route('writing.index') }}">อ่านบทความ <span aria-hidden="true">→</span></a>
             </div>
 
-            <div class="hero-visual" role="img" aria-label="ภาพประกอบชั่วคราว บรรยากาศริมหน้าต่างพร้อมหนังสือและกาแฟ รอภาพถ่ายจากเจ้าของ">
-                <div class="hero-window" aria-hidden="true"></div>
-                <div class="hero-leaf-shadow" aria-hidden="true"></div>
-                <div class="hero-table" aria-hidden="true"></div>
-                <div class="hero-book" aria-hidden="true"></div>
-                <div class="hero-vase" aria-hidden="true"></div>
-                <div class="hero-cup" aria-hidden="true"></div>
-                <span class="hero-placeholder-label">ภาพประกอบชั่วคราว · รอภาพถ่ายจากเจ้าของ</span>
+            <div class="hero-visual">
+                @if (filled(config('jocky.home_hero_image')) && filled(config('jocky.home_hero_alt')))
+                    <img class="hero-photo" src="{{ asset(ltrim(config('jocky.home_hero_image'), '/')) }}" width="1600" height="900" alt="{{ config('jocky.home_hero_alt') }}" loading="eager" fetchpriority="high" decoding="async">
+                @else
+                    <div class="hero-illustration" role="img" aria-label="ภาพประกอบชั่วคราว บรรยากาศริมหน้าต่างพร้อมหนังสือและกาแฟ รอภาพถ่ายจากเจ้าของ">
+                        <div class="hero-window" aria-hidden="true"></div>
+                        <div class="hero-leaf-shadow" aria-hidden="true"></div>
+                        <div class="hero-table" aria-hidden="true"></div>
+                        <div class="hero-book" aria-hidden="true"></div>
+                        <div class="hero-vase" aria-hidden="true"></div>
+                        <div class="hero-cup" aria-hidden="true"></div>
+                    </div>
+                    <span class="hero-placeholder-label">ภาพประกอบชั่วคราว · รอภาพถ่ายจากเจ้าของ</span>
+                @endif
             </div>
 
             <aside class="hero-note" aria-label="ถ้อยคำประจำบันทึก">บางเรื่อง<br>อาจเล็กน้อย<br>แต่ก็มีความหมาย<br>เสมอ<span aria-hidden="true"></span></aside>

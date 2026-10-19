@@ -30,4 +30,19 @@ class ThemeRenderingTest extends TestCase
         $this->assertStringNotContainsString('mailto:', $footer);
         $this->assertStringContainsString('บทความ', $footer);
     }
+
+    public function test_owner_hero_image_can_replace_the_placeholder_through_configuration(): void
+    {
+        config([
+            'jocky.home_hero_image' => 'images/owner-hero.webp',
+            'jocky.home_hero_alt' => 'แสงเช้าบนโต๊ะไม้พร้อมสมุดบันทึก',
+        ]);
+
+        $html = view('home', ['entries' => collect()])->render();
+
+        $this->assertStringContainsString(asset('images/owner-hero.webp'), $html);
+        $this->assertStringContainsString('alt="แสงเช้าบนโต๊ะไม้พร้อมสมุดบันทึก"', $html);
+        $this->assertStringContainsString('fetchpriority="high"', $html);
+        $this->assertStringNotContainsString('ภาพประกอบชั่วคราว · รอภาพถ่ายจากเจ้าของ', $html);
+    }
 }

@@ -9,6 +9,7 @@ use App\Models\User;
 use Filament\Panel;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Mockery;
 use Tests\TestCase;
 
@@ -87,6 +88,42 @@ class CmsDatabaseTest extends TestCase
 
         $this->expectException(QueryException::class);
         $this->article(['title' => 'Duplicate', 'slug' => 'a-test-article']);
+    }
+
+    public function test_homepage_grid_handles_zero_through_four_temporary_published_fixtures(): void
+    {
+        $this->assertSame('testing', app()->environment());
+        $this->assertSame('jocky_test', DB::connection()->getDatabaseName());
+        $this->assertSame('jocky_test_user', DB::connection()->getConfig('username'));
+
+        // Hide any pre-existing test publications inside this test transaction only.
+        Article::query()->where('status', 'published')->update(['published_at' => now()->addYear()]);
+
+        $fixtures = [];
+
+        for ($count = 0; $count <= 4; $count++) {
+            if ($count > 0) {
+                $fixtures[] = $this->article([
+                    'title' => "ตัวอย่างทดสอบหน้าแรก {$count}",
+                    'slug' => "temporary-home-grid-{$count}",
+                    'status' => 'published',
+                    'published_at' => now()->subMinutes(6 - $count),
+                ]);
+            }
+
+            $response = $this->get('/')->assertOk();
+
+            if ($count === 0) {
+                $response->assertSee('ยังไม่มีบทความ');
+
+                continue;
+            }
+
+            $response->assertSee("article-grid--{$count}");
+            $response->assertSeeInOrder(collect($fixtures)->sortByDesc('published_at')->pluck('title')->all());
+            $this->assertSame($count, preg_match_all('/<article class="article-card\b/', $response->getContent()));
+            $this->assertSame(1, substr_count($response->getContent(), 'article-card--featured'));
+        }
     }
 
     public function test_rich_text_is_sanitized_when_saved_and_rendered(): void
