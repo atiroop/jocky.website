@@ -55,10 +55,10 @@ h1, h2, h3, p { margin-top: 0; }
 .search-link { display: grid; width: 44px; height: 28px; place-items: center; margin-left: 1px; border-left: 1px solid var(--rule); }
 .search-link svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
 
-/* Home hero: the illustration remains clearly labelled until a final photo is supplied. */
+/* Home hero: separated editorial copy and full-bleed photography. */
 .home-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--rule); }
-.home-hero-inner { position: relative; display: flex; min-height: 424px; align-items: center; }
-.hero-copy { position: relative; z-index: 1; width: 58%; padding: 46px 40px 50px 0; }
+.home-hero-inner { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(32px, 4vw, 56px); min-height: 424px; align-items: center; }
+.hero-copy { position: relative; z-index: 2; width: auto; max-width: 560px; padding: 46px 0 50px; }
 .eyebrow { margin: 0; color: var(--bronze-dark); font-size: 12px; font-weight: 500; line-height: 1.7; }
 .hero-copy h1 { max-width: 670px; margin: 17px 0 18px; font-size: clamp(38px, 4.2vw, 58px); font-weight: 500; line-height: 1.34; }
 .hero-copy h1 span { display: block; color: #8a877f; font-weight: 400; }
@@ -66,8 +66,8 @@ h1, h2, h3, p { margin-top: 0; }
 .hero-button { display: inline-flex; min-height: 46px; align-items: center; gap: 13px; margin-top: 24px; padding: 10px 26px; background: var(--bronze); color: #fffdf9; font-size: 14px; transition: background .18s ease; }
 .hero-button:hover { background: var(--bronze-dark); }
 .hero-button span { font-size: 18px; line-height: 1; }
-.hero-visual { position: absolute; inset: 0 calc(50% - 50vw) 0 51%; overflow: hidden; background: linear-gradient(125deg, #eee7dc 0%, #d8c8b5 42%, #c0a68d 100%); }
-.hero-visual::before { position: absolute; z-index: 1; inset: 0 auto 0 0; width: 26%; background: linear-gradient(90deg, var(--paper), rgb(247 245 240 / 0)); content: ''; }
+.hero-visual { position: absolute; inset: 0 auto 0 calc(50% + clamp(16px, 2vw, 28px)); width: calc(50vw - clamp(16px, 2vw, 28px)); overflow: hidden; background: linear-gradient(125deg, #eee7dc 0%, #d8c8b5 42%, #c0a68d 100%); }
+.hero-visual::before { position: absolute; z-index: 1; inset: 0 auto 0 0; width: 18%; background: linear-gradient(90deg, var(--paper), rgb(247 245 240 / 0)); content: ''; }
 .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .hero-window { position: absolute; top: -8%; left: 9%; width: 43%; height: 78%; border-right: 9px solid rgb(91 72 54 / 18%); border-bottom: 9px solid rgb(91 72 54 / 15%); background: linear-gradient(145deg, rgb(255 253 248 / 83%), rgb(255 253 248 / 22%)); box-shadow: inset -2px 0 0 rgb(255 255 255 / 72%), 22px 13px 44px rgb(80 62 42 / 12%); }
 .hero-window::before { position: absolute; top: 0; right: 32%; width: 5px; height: 100%; background: rgb(107 84 61 / 16%); content: ''; }
@@ -100,7 +100,7 @@ h1, h2, h3, p { margin-top: 0; }
 .article-card:first-child { padding-left: 0; border-left: 0; }
 .article-card-image-link { display: block; overflow: hidden; margin-bottom: 12px; background: #e9e1d5; }
 .article-card-image { display: block; width: 100%; aspect-ratio: 1.63 / 1; object-fit: cover; transition: transform .25s ease; }
-.article-card--featured .article-card-image { aspect-ratio: 2.35 / 1; }
+.article-card--featured .article-card-image { aspect-ratio: 4 / 3; object-fit: contain; background: #eee9e0; }
 .article-card-image-link:hover .article-card-image { transform: scale(1.02); }
 .article-card-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 0 0 7px; color: var(--muted); font-size: 11px; line-height: 1.7; }
 .article-card-meta > span:first-child { color: var(--bronze-dark); }
@@ -191,14 +191,14 @@ h1, h2, h3, p { margin-top: 0; }
 
 @media (max-width: 900px) {
     .page-width, .site-header, .site-footer { width: min(100% - 48px, var(--page-width)); }
-    .hero-copy { width: 62%; }
-    .hero-visual { left: 48%; }
+    .home-hero-inner { column-gap: 24px; }
+    .hero-copy { max-width: none; padding: 36px 0; }
+    .hero-visual { left: calc(50% + 12px); width: calc(50vw - 12px); }
     .hero-note { right: 0; width: 90px; font-size: 12px; }
     .article-grid, .article-grid--1, .article-grid--2, .article-grid--3, .article-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .article-grid--1 { grid-template-columns: minmax(0, 1fr); }
     .article-grid--4 .article-card--featured { grid-column: 1 / -1; }
     .article-card { padding-left: 12px; }
-    .article-card--featured .article-card-image { aspect-ratio: 1.75 / 1; }
     .article-card h3 { font-size: 15px; }
     .article-card--featured h3 { font-size: 20px; }
 }
@@ -215,7 +215,7 @@ h1, h2, h3, p { margin-top: 0; }
     .hero-copy h1 { max-width: 530px; margin: 9px 0 10px; font-size: clamp(32px, 9vw, 40px); line-height: 1.42; }
     .hero-description { max-width: 500px; font-size: 15px; }
     .hero-button { min-height: 44px; margin-top: 17px; padding-inline: 20px; }
-    .hero-visual { position: relative; inset: auto; width: calc(100% + 36px); height: 235px; margin: 0 -18px; }
+    .hero-visual { position: relative; inset: auto; width: calc(100% + 36px); height: 235px; min-height: 0; margin: 0 -18px; }
     .hero-visual::before { width: 12%; }
     .hero-photo { object-position: 62% center; }
     .hero-note { display: none; }
@@ -228,7 +228,7 @@ h1, h2, h3, p { margin-top: 0; }
     .article-card, .article-card:first-child { padding: 22px 0; border: 0; border-top: 1px solid var(--rule); }
     .article-card:first-child { padding-top: 0; border-top: 0; }
     .article-card-image-link { margin-bottom: 11px; }
-    .article-card-image, .article-card--featured .article-card-image { aspect-ratio: 1.72 / 1; }
+    .article-card-image { aspect-ratio: 1.72 / 1; }
     .article-grid--4 .article-card:nth-child(4) { display: block; }
     .article-card h3, .article-card--featured h3 { margin-bottom: 5px; font-size: 19px; line-height: 1.55; }
     .article-card-excerpt, .article-card--featured .article-card-excerpt { font-size: 14px; line-height: 1.8; }
